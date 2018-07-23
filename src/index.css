@@ -5,6 +5,7 @@
 body{
   margin: 0px;
   padding: 0px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 /* 
 p{
@@ -17,7 +18,6 @@ canvas {
 
 img {
   padding: 5px;
-  
 }
 
 .tooltip{
@@ -30,13 +30,14 @@ img {
   z-index: 1;
   opacity: 0;
   transition: opacity 0.3s;
+  position: absolute;
+  top: -10px;
+  left: 50px;
 }
 
 .tooltip:hover ul {
   visibility: visible;
   color: white;
   opacity: 0.5;
-  position: absolute;
-  top: -10px;
-  left: 50px;
+
 }

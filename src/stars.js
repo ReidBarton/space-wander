@@ -1,26 +1,10 @@
-var points = [];
-var canvas;
-var speed;
-var stars = 1000;
+var points = []; // all the stars
+var canvas; //p5.js canvas element
+var speed; // speed we are flying though the star field
+var stars = 1000; //number of stars in our universe at any one time
+var jump = false; // are we jumping to light speed???
 
-function setup() {
-  canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent('sketch-holder');
-  speed = 10;
-  background(0);
-  for(var i=0; i<stars; i++){
-    //points.push(new Point(100*random(), 100*random()));
-    points.push(new Point(random()*width-width/2, random()*height-height/2));
-   // points.push(new Point(0,0));
-    stroke(255);
-  }
-  
-}
-
-var time = 0;
-var noiseScale=0.01;
-
-
+// class to represent a star
 class Point {
   constructor(x, y) {
     this.xpos = x;
@@ -31,39 +15,47 @@ class Point {
   }
 }
 
-function keyPressed(){
-  if (keyCode === 32) {
-    speed = 6;
-    if(speed){
-      jump = true;
-    }
-
+//p5.js setup function, gets run once
+function setup() {
+  canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent('sketch-holder');
+  speed = 10;
+  background(0);
+  //spawn random stars
+  for(var i=0; i<stars; i++){
+    points.push(new Point(random()*width-width/2, random()*height-height/2));
   }
-  console.log(keyCode);
-  if(keyCode === 13)
-  {
-    speed = 0;
-  }
-  console.log(speed);
 }
 
-var jump = false;
-//var angle = PI/6;
+// p5 function, gets called when a key on the keyboard is pressed
+// keyCode is what ASCII code for the key
+function keyPressed(){
+  //enter key to stop the movement
+  if(keyCode === 13){
+    speed = 0;
+  }
+  // TODO: add more keys to do things, lasers?
+}
 
+// p5 draw function gets called often
 function draw() {
-  time+=0.01;
-  //stroke("#88aaff");
+  // color change with 'dopler shifted' speed
   stroke(150,150,180+speed);
+  //refresh screen
   background(0);
+  //make sure we are not jumping to light speed forever
   if(jump){
     jump= false;
   }
  
+  //angle the stars according to the mouse
+  //TODO: create dead zone for straight flying 
   points.map(point=>{
     point.xpos-=(mouseX-width/2)/width*point.zpos/100;
     point.ypos-=(mouseY-height/2)/height*point.zpos/100;
   })
 
+  // slide according to arrow keys
   if (keyIsDown(RIGHT_ARROW)) {
     points.map(point=>{point.xpos-=3;});
   } else if (keyIsDown(LEFT_ARROW)) {
@@ -73,26 +65,22 @@ function draw() {
     points.map(point=>{point.ypos+=3;});
   } else if (keyIsDown(DOWN_ARROW)) {
     points.map(point=>{point.ypos-=3;});
-  } else if (keyIsDown(32)) {
+  } else if (keyIsDown(32) || mouseIsPressed) {
     if(speed<120)
       speed= speed*1.1;
       jump =true;
   } else {
-    //console.log(speed);
     if(speed>5 || speed===0){
       speed/=1.3;
     } else {
       speed = 5;
     }
-    
   }
 
-
-
-  // loop through stars
+  // loop through all stars
   for(var i=0; i<stars; i++){
 
-    //current scaled position
+    //current scaled position on screen
     var sx = map(points[i].xpos/points[i].zpos, -0.5, 0.5, 0, width);
     var sy = map(points[i].ypos/points[i].zpos, -0.5, 0.5, 0, height);
 
