@@ -6,6 +6,7 @@ body{
   margin: 0px;
   padding: 0px;
   font-family: Arial, Helvetica, sans-serif;
+  cursor: url(../bin/cursor.png), auto ;
 }
 /* 
 p{
@@ -41,3 +42,5 @@ img {
   opacity: 0.5;
 
 }
+
+.crosshair{  }

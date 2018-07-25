@@ -2,7 +2,7 @@ var points = []; // all the stars
 var canvas; //p5.js canvas element
 var speed; // speed we are flying though the star field
 var stars = 1000; //number of stars in our universe at any one time
-var jump = false; // are we jumping to light speed???
+//var jump = false; // are we jumping to light speed???
 
 // class to represent a star
 class Point {
@@ -33,6 +33,9 @@ function keyPressed(){
   //enter key to stop the movement
   if(keyCode === 13){
     speed = 0;
+  } else if(keyCode === 32 || keyCode === 16){
+    if(speed === 0)
+      speed = 5;  
   }
   // TODO: add more keys to do things, lasers?
 }
@@ -44,16 +47,16 @@ function draw() {
   //refresh screen
   background(0);
   //make sure we are not jumping to light speed forever
-  if(jump){
-    jump= false;
-  }
+  // if(jump){
+  //   jump= false;
+  // }
  
   //angle the stars according to the mouse
   //TODO: create dead zone for straight flying 
   points.map(point=>{
     point.xpos-=(mouseX-width/2)/width*point.zpos/100;
     point.ypos-=(mouseY-height/2)/height*point.zpos/100;
-  })
+  });
 
   // slide according to arrow keys
   if (keyIsDown(RIGHT_ARROW)) {
@@ -67,9 +70,13 @@ function draw() {
     points.map(point=>{point.ypos-=3;});
   } else if (keyIsDown(32) || mouseIsPressed) {
     if(speed<120)
-      speed= speed*1.1;
-      jump =true;
-  } else {
+      speed= speed*1.075;
+      //jump =true;
+  } else if(keyIsDown(16)) {
+    if(speed<20){
+      speed= speed*1.10;
+    }
+  } else{
     if(speed>5 || speed===0){
       speed/=1.3;
     } else {
@@ -94,7 +101,7 @@ function draw() {
     line(sx, sy, px, py);
 
     //if we are making the jump to light speed, make the stars streak by keeping old position
-    if(!(jump && speed<=50)){
+    if(!(keyIsDown(32) && speed<=50)){
       points[i].pz = points[i].zpos;
       points[i].px = points[i].xpos;
     }
@@ -142,4 +149,7 @@ function draw() {
       points[i].pz = points[i].zpos;
     }
   }
+
+  strokeWeight(3);
+  rect(15, height/2-map(speed, 0, 120, 0, height/3), 15, map(speed, 0, 120, 0, height/3));
 }
